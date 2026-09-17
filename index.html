@@ -1,384 +1,778 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
+<title>Huyền Nguyệt</title>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Huyền Nguyệt — Chính sách quyền riêng tư</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0D0617;
-    --surface: #1A0F2E;
-    --surface-2: #241A3D;
-    --ink: #F2EDFB;
-    --ink-muted: #A99BC7;
-    --gold: #E8B84B;
-    --gold-dim: #B4841B;
-    --hairline: rgba(232, 184, 75, 0.22);
-    /* Same pairing the Huyền Nguyệt app itself uses (ui-guidelines.md §4) —
-       both verified via the Fontsource API to ship a "vietnamese" subset,
-       so diacritics compose correctly (unlike Georgia, which silently
-       dropped combining marks on some systems). Fallback chain ends on the
-       proven-safe system sans, not Georgia, in case the webfont fails to load. */
-    --display: 'Cormorant Garamond', 'Segoe UI', sans-serif;
-    --sans: 'Be Vietnam Pro', 'Segoe UI', 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
-  }
-  /* System light → light palette, unless the toggle explicitly picked dark. */
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --bg: #F3E8D6;
-      --surface: #FBF4E6;
-      --surface-2: #E9DBC0;
-      --ink: #2A2036;
-      --ink-muted: #6B5A44;
-      --gold: #B4841B;
-      --gold-dim: #8A6414;
-      --hairline: rgba(180, 132, 27, 0.35);
-    }
-  }
-  /* Explicit toggle wins over system preference in both directions. */
-  :root[data-theme="light"] {
-    --bg: #F3E8D6;
-    --surface: #FBF4E6;
-    --surface-2: #E9DBC0;
-    --ink: #2A2036;
-    --ink-muted: #6B5A44;
-    --gold: #B4841B;
-    --gold-dim: #8A6414;
-    --hairline: rgba(180, 132, 27, 0.35);
-  }
-  :root[data-theme="dark"] {
-    --bg: #0D0617;
-    --surface: #1A0F2E;
-    --surface-2: #241A3D;
-    --ink: #F2EDFB;
-    --ink-muted: #A99BC7;
-    --gold: #E8B84B;
-    --gold-dim: #B4841B;
-    --hairline: rgba(232, 184, 75, 0.22);
+  :root{
+    --bg:#12091F;
+    --surface:#1D1033;
+    --surface-2:#2A1B47;
+    --surface-3:#241735;
+    --primary:#6C4DF6;
+    --primary-soft:#9C8FC2;
+    --gold:#E8B84B;
+    --gold-soft:#F3D48A;
+    --on-gold:#241503;
+    --text:#F5F1FA;
+    --text-muted:#B8A9D9;
+    --outline:#4A3570;
+
+    --font-display:"Playfair Display", "Noto Serif", Georgia, serif;
+    --font-heading:"Cormorant Garamond", "Noto Serif", Georgia, serif;
+    --font-body:"Be Vietnam Pro", "Noto Sans", system-ui, sans-serif;
+
+    --side-pad: clamp(20px, 6vw, 64px);
+    --section-pad: clamp(64px, 9vw, 112px);
+
+    color-scheme: dark;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  * { box-sizing: border-box; }
-  html, body { background: var(--bg); transition: background-color 0.25s ease; }
-  @media (prefers-reduced-motion: reduce) {
-    html, body { transition: none; }
-  }
-  body {
-    color: var(--ink);
-    font-family: var(--sans);
-    line-height: 1.65;
-    margin: 0;
-    padding: 0;
-  }
-  .page {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 0 24px 96px;
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
   }
 
-  /* ---- Header: constellation mark, unique to this app rather than a stock hero ---- */
-  .header {
-    padding: 48px 0 40px;
-    text-align: center;
-  }
-  .mark-button {
-    display: block;
-    margin: 0 auto 20px;
-    padding: 8px;
-    background: none;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .mark-button:hover { background: var(--surface); }
-  .mark-button:focus-visible {
-    outline: 2px solid var(--gold);
-    outline-offset: 2px;
-  }
-  .mark {
-    display: block;
-  }
-  .eyebrow {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--gold);
-    margin: 0 0 10px;
-  }
-  h1 {
-    font-family: var(--display);
-    font-size: clamp(2rem, 5.2vw, 2.75rem);
-    font-weight: 600;
-    margin: 0 0 10px;
-    color: var(--ink);
-  }
-  .effective-date {
-    color: var(--ink-muted);
-    font-size: 0.9rem;
-    margin: 0;
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
 
-  .lede {
-    background: var(--surface);
-    border: 1px solid var(--hairline);
-    border-radius: 14px;
-    padding: 22px 26px;
-    margin: 8px 0 52px;
-    font-size: 1.03rem;
-  }
-  .lede p { margin: 0; }
-  .lede strong { color: var(--gold); font-weight: 600; }
+  img{max-width:100%; display:block;}
+  [hidden]{display:none !important;}
 
-  section { margin: 0 0 46px; }
-  h2 {
-    font-family: var(--display);
-    font-size: 1.45rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0 0 4px;
-  }
-  .section-index {
-    display: block;
-    font-family: var(--sans);
-    font-style: normal;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    color: var(--gold-dim);
-    margin-bottom: 6px;
-  }
-  h2 + p, h2 + ul { margin-top: 18px; }
+  a{color:inherit;}
+  h1,h2,h3{text-wrap:balance; margin:0;}
+  p{margin:0;}
 
-  p { margin: 0 0 14px; max-width: 64ch; color: var(--ink); }
-  .muted { color: var(--ink-muted); }
-
-  /* ---- Left-rule list instead of a rounded card per item ---- */
-  .rule-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .rule-list li {
-    border-left: 2px solid var(--hairline);
-    padding: 4px 0 4px 18px;
-    margin: 0 0 18px;
-    max-width: 60ch;
-  }
-  .rule-list li:last-child { margin-bottom: 0; }
-  .rule-list .item-title {
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .rule-list .item-badge {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-left: 8px;
-  }
-  .rule-list .item-desc {
-    color: var(--ink-muted);
-    font-size: 0.94rem;
-    margin-top: 4px;
+  .wrap{
+    max-width:1180px;
+    margin-inline:auto;
+    padding-inline:var(--side-pad);
   }
 
-  .contact-line {
-    padding-left: 18px;
-    border-left: 2px solid var(--hairline);
-  }
-  .contact-line a {
-    color: var(--gold);
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 1px solid var(--hairline);
-  }
-  .contact-line a:hover,
-  .contact-line a:focus-visible {
-    border-bottom-color: var(--gold);
-  }
-  a:focus-visible {
-    outline: 2px solid var(--gold);
-    outline-offset: 2px;
+  :is(a,button):focus-visible{
+    outline:2px solid var(--gold-soft);
+    outline-offset:3px;
+    border-radius:6px;
   }
 
-  footer {
-    margin-top: 60px;
-    padding-top: 20px;
-    border-top: 1px solid var(--hairline);
-    color: var(--ink-muted);
-    font-size: 0.82rem;
-    text-align: center;
+  .eyebrow{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.72rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--gold);
   }
 
-  @media (max-width: 480px) {
-    .page { padding: 0 18px 72px; }
-    .header { padding: 36px 0 32px; }
-    .lede { padding: 18px 20px; }
+  /* ---------- nav ---------- */
+  .nav{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:50;
+    padding-block:16px;
+    transition:background-color .35s ease, box-shadow .35s ease, backdrop-filter .35s ease;
   }
+  .nav.is-scrolled{
+    background:rgba(18,9,31,0.78);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    box-shadow:0 1px 0 var(--outline);
+  }
+  .nav .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+  }
+  .brand svg{width:30px;height:30px;flex:none;}
+  .brand span{
+    font-family:var(--font-heading);
+    font-weight:600;
+    font-size:1.3rem;
+    letter-spacing:0.01em;
+  }
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:clamp(16px,3vw,32px);
+    list-style:none;
+    margin:0; padding:0;
+  }
+  .nav-links a{
+    text-decoration:none;
+    font-size:0.92rem;
+    font-weight:500;
+    color:var(--text-muted);
+    transition:color .2s ease;
+  }
+  .nav-links a:hover{color:var(--text);}
+  @media (max-width:720px){ .nav-links{display:none;} }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:13px 26px;
+    border-radius:999px;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.95rem;
+    text-decoration:none;
+    cursor:pointer;
+    border:1px solid transparent;
+    white-space:nowrap;
+  }
+  .btn-gold{
+    background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+    color:var(--on-gold);
+    box-shadow:0 8px 24px -8px rgba(232,184,75,0.55);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn-gold:hover{transform:translateY(-1px); box-shadow:0 10px 28px -6px rgba(232,184,75,0.65);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--text);
+    border-color:var(--outline);
+    transition:border-color .2s ease, background-color .2s ease;
+  }
+  .btn-ghost:hover{border-color:var(--primary-soft); background:rgba(108,77,246,0.08);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding-block: clamp(48px,8vw,72px) var(--section-pad);
+    overflow:hidden;
+  }
+  .hero-glow{
+    position:absolute;
+    top:-180px; left:50%;
+    transform:translateX(-50%);
+    width:900px; height:700px;
+    background:radial-gradient(closest-side, rgba(108,77,246,0.30), rgba(108,77,246,0) 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+  #stars{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    pointer-events:none;
+    z-index:0;
+  }
+  .hero .wrap{
+    position:relative; z-index:1;
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    align-items:center;
+    gap:clamp(32px,6vw,64px);
+  }
+  @media (max-width:900px){
+    .hero .wrap{grid-template-columns:1fr; text-align:center;}
+    .hero-copy{order:1;}
+    .hero-art{order:2;}
+    .hero-copy .btn-row{justify-content:center;}
+  }
+  .hero-copy h1{
+    font-family:var(--font-display);
+    font-weight:900;
+    font-size:clamp(2.35rem, 5.6vw, 4rem);
+    line-height:1.08;
+    margin-block:14px 18px;
+  }
+  .hero-copy h1 em{
+    font-style:normal;
+    background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .hero-copy p.lede{
+    max-width:46ch;
+    color:var(--text-muted);
+    font-size:1.05rem;
+  }
+  @media (max-width:900px){ .hero-copy p.lede{margin-inline:auto;} }
+  .btn-row{
+    display:flex; flex-wrap:wrap;
+    gap:14px;
+    margin-top:30px;
+  }
+
+  .hero-art{
+    position:relative;
+    display:flex; justify-content:center;
+  }
+  .firefly{
+    position:absolute;
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--gold-soft);
+    box-shadow:0 0 12px 4px rgba(243,212,138,0.85);
+    animation:drift 7s ease-in-out infinite;
+    z-index:2;
+  }
+  @keyframes drift{
+    0%,100%{ transform:translate(0,0); opacity:.55; }
+    50%{ transform:translate(var(--dx,14px), var(--dy,-18px)); opacity:1; }
+  }
+
+  .phone{
+    position:relative;
+    width:min(300px, 72vw);
+    aspect-ratio:1080/2400;
+    background:var(--surface-2);
+    border-radius:38px;
+    padding:9px;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,0.7), inset 0 0 0 1px var(--outline);
+    animation:float 6s ease-in-out infinite;
+  }
+  @keyframes float{
+    0%,100%{ transform:translateY(0) rotate(-1.2deg); }
+    50%{ transform:translateY(-14px) rotate(0.6deg); }
+  }
+  .phone::before{
+    content:"";
+    position:absolute; top:19px; left:50%; transform:translateX(-50%);
+    width:64px; height:5px; border-radius:4px;
+    background:rgba(0,0,0,0.35);
+    z-index:2;
+  }
+  .phone img{
+    width:100%; height:100%;
+    object-fit:cover;
+    border-radius:29px;
+  }
+  .phone-lg{ width:min(320px, 74vw); }
+
+  /* ---------- stats ---------- */
+  .stats{
+    border-block:1px solid var(--outline);
+    background:linear-gradient(180deg, rgba(42,27,71,0.35), rgba(42,27,71,0));
+  }
+  .stats .wrap{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
+    padding-block:clamp(32px,5vw,44px);
+  }
+  @media (max-width:720px){ .stats .wrap{grid-template-columns:repeat(2,1fr);} }
+  .stat{ text-align:center; }
+  .stat b{
+    display:block;
+    font-family:var(--font-display);
+    font-weight:900;
+    font-size:clamp(1.8rem,3.4vw,2.6rem);
+    font-variant-numeric:tabular-nums;
+    color:var(--gold);
+  }
+  .stat span{
+    display:block;
+    margin-top:6px;
+    font-size:0.86rem;
+    color:var(--text-muted);
+  }
+
+  /* ---------- section heading ---------- */
+  .section-head{
+    max-width:640px;
+    margin-bottom:clamp(36px,5vw,56px);
+  }
+  .section-head.center{ margin-inline:auto; text-align:center; }
+  .section-head h2{
+    font-family:var(--font-heading);
+    font-weight:600;
+    font-size:clamp(1.9rem,3.6vw,2.7rem);
+    margin-top:10px;
+  }
+  .section-head p{
+    margin-top:12px;
+    color:var(--text-muted);
+    font-size:1.02rem;
+  }
+
+  /* ---------- features ---------- */
+  .features{ padding-block:var(--section-pad); }
+  .feature-row{
+    display:grid;
+    grid-template-columns:0.85fr 1.15fr;
+    align-items:center;
+    gap:clamp(28px,6vw,72px);
+    padding-block:clamp(40px,6vw,64px);
+    opacity:0; transform:translateY(28px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .feature-row.is-visible{ opacity:1; transform:translateY(0); }
+  .feature-row:not(:last-child){ border-bottom:1px solid var(--outline); }
+  .feature-row:nth-of-type(even){ grid-template-columns:1.15fr 0.85fr; }
+  .feature-row:nth-of-type(even) .feature-art{ order:2; }
+  @media (max-width:860px){
+    .feature-row, .feature-row:nth-of-type(even){ grid-template-columns:1fr; text-align:center; }
+    .feature-row:nth-of-type(even) .feature-art{ order:0; }
+  }
+  .feature-art{ display:flex; justify-content:center; }
+  .feature-copy h3{
+    font-family:var(--font-heading);
+    font-weight:600;
+    font-size:clamp(1.5rem,2.6vw,2rem);
+    margin-top:10px;
+  }
+  .feature-copy p{
+    margin-top:14px;
+    color:var(--text-muted);
+    max-width:52ch;
+  }
+  @media (max-width:860px){ .feature-copy p{ margin-inline:auto; } }
+
+  /* ---------- theme showcase ---------- */
+  .themes{
+    padding-block:var(--section-pad);
+    background:var(--surface);
+    border-block:1px solid var(--outline);
+  }
+  .theme-pair{
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:clamp(16px,4vw,36px);
+    margin-top:clamp(28px,5vw,44px);
+  }
+  .theme-pair .phone{ width:min(230px,42vw); animation:none; }
+  .theme-pair .phone:first-child{ transform:rotate(-4deg); margin-bottom:-12px; }
+  .theme-pair .phone:last-child{ transform:rotate(4deg); }
+
+  /* ---------- why grid ---------- */
+  .why{ padding-block:var(--section-pad); }
+  .why-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--outline);
+    border:1px solid var(--outline);
+    border-radius:20px;
+    overflow:hidden;
+  }
+  @media (max-width:900px){ .why-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:520px){ .why-grid{grid-template-columns:1fr;} }
+  .why-card{
+    background:var(--surface);
+    padding:clamp(24px,3vw,32px);
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .why-card .mark{
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:12px;
+    background:var(--surface-3);
+    color:var(--gold);
+  }
+  .why-card h3{
+    font-family:var(--font-heading);
+    font-weight:600;
+    font-size:1.25rem;
+  }
+  .why-card p{ color:var(--text-muted); font-size:0.92rem; }
+
+  /* ---------- testimonials ---------- */
+  .voices{ padding-block:var(--section-pad); }
+  .voice-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  @media (max-width:860px){ .voice-grid{grid-template-columns:1fr; max-width:440px; margin-inline:auto;} }
+  .voice-card{
+    background:var(--surface);
+    border:1px solid var(--outline);
+    border-radius:20px;
+    padding:26px;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .voice-card:nth-child(2){ transform:translateY(-14px); }
+  @media (max-width:860px){ .voice-card:nth-child(2){ transform:none; } }
+  .voice-quote{
+    font-family:var(--font-heading);
+    font-style:italic;
+    font-size:1.12rem;
+    color:var(--text);
+  }
+  .voice-who{ display:flex; align-items:center; gap:12px; margin-top:auto; }
+  .avatar{
+    width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface-3);
+    border:1px solid var(--gold);
+    color:var(--gold);
+    font-family:var(--font-heading); font-weight:600;
+    flex:none;
+  }
+  .voice-who b{ display:block; font-size:0.92rem; }
+  .voice-who span{ display:block; font-size:0.8rem; color:var(--text-muted); }
+  .voices-note{
+    margin-top:22px;
+    font-size:0.82rem;
+    color:var(--text-muted);
+  }
+
+  /* ---------- final cta ---------- */
+  .cta{
+    padding-block:var(--section-pad);
+  }
+  .cta-panel{
+    position:relative;
+    border-radius:28px;
+    border:1px solid var(--outline);
+    background:radial-gradient(120% 160% at 50% 0%, rgba(232,184,75,0.14), var(--surface) 60%);
+    padding:clamp(40px,7vw,72px) clamp(24px,6vw,64px);
+    text-align:center;
+    overflow:hidden;
+  }
+  .cta-panel h2{
+    font-family:var(--font-display);
+    font-weight:900;
+    font-size:clamp(1.9rem,4vw,2.8rem);
+  }
+  .cta-panel p{
+    margin:16px auto 0;
+    max-width:52ch;
+    color:var(--text-muted);
+  }
+  .cta-panel .btn-row{ justify-content:center; }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding-block:40px calc(40px + env(safe-area-inset-bottom, 0px));
+    border-top:1px solid var(--outline);
+  }
+  footer .wrap{
+    display:flex; flex-wrap:wrap; gap:16px;
+    align-items:center; justify-content:space-between;
+  }
+  footer .foot-brand{ display:flex; align-items:center; gap:10px; }
+  footer .foot-brand svg{ width:22px; height:22px; }
+  footer .foot-brand span{ font-family:var(--font-heading); font-weight:600; }
+  footer p{ color:var(--text-muted); font-size:0.82rem; }
+  footer a{ color:var(--text-muted); }
+  footer a:hover{ color:var(--text); }
 </style>
-</head>
-<body>
-<div class="page">
 
-  <div class="header">
-    <button type="button" class="mark-button" id="markButton" aria-label="Đổi giao diện sáng/tối">
-      <canvas class="mark" width="72" height="72" id="mark" aria-hidden="true"></canvas>
-    </button>
-    <p class="eyebrow">HUYỀN NGUYỆT</p>
-    <h1>Chính sách quyền riêng tư</h1>
-    <p class="effective-date">Có hiệu lực từ ngày 18 tháng 8 năm 2026</p>
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="32" cy="32" r="26" fill="#6C4DF6"/>
+        <circle cx="37" cy="30.5" r="18" fill="#12091F"/>
+        <circle cx="30" cy="32" r="18" fill="#E8B84B"/>
+        <circle cx="37" cy="30.5" r="18" fill="#12091F"/>
+        <path d="M50 44 L52.4 49.6 L58 52 L52.4 54.4 L50 60 L47.6 54.4 L42 52 L47.6 49.6 Z" fill="#E8B84B"/>
+      </svg>
+      <span>Huyền Nguyệt</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Tính năng</a></li>
+      <li><a href="#why">Vì sao chọn</a></li>
+      <li><a href="#voices">Trải nghiệm</a></li>
+    </ul>
+    <a class="btn btn-gold" href="https://play.google.com/store/apps/details?id=com.huyennguyet.app" target="_blank" rel="noopener">Tải trên Google Play</a>
   </div>
+</header>
 
-  <div class="lede">
-    <p><strong>Tóm tắt trong 1 câu:</strong> Huyền Nguyệt không thu thập, không gửi đi và không chia sẻ bất kỳ dữ liệu cá nhân nào của bạn — toàn bộ thông tin bạn nhập chỉ nằm trên chính thiết bị của bạn.</p>
+<main id="top">
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">Tarot · Chiêm tinh · Lịch âm Việt</p>
+        <h1>Một cây trong đêm,<br>luôn <em>chờ bạn</em> ghé qua</h1>
+        <p class="lede">Huyền Nguyệt gói trọn tarot, bản đồ sao và lịch âm Việt vào một app tối giản — rút ba lá bài mỗi ngày, xem giờ tốt xấu, dựng lá số của riêng bạn. Không cần mạng, không quảng cáo, không thu thập dữ liệu.</p>
+        <div class="btn-row">
+          <a class="btn btn-gold" href="https://play.google.com/store/apps/details?id=com.huyennguyet.app" target="_blank" rel="noopener">Tải trên Google Play</a>
+          <a class="btn btn-ghost" href="#features">Xem app hoạt động ↓</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <span class="firefly" style="top:10%; left:8%; --dx:16px; --dy:-20px; animation-delay:0s;"></span>
+        <span class="firefly" style="top:70%; left:4%; --dx:-14px; --dy:-16px; animation-delay:1.4s;"></span>
+        <span class="firefly" style="top:22%; right:2%; --dx:-18px; --dy:14px; animation-delay:2.6s;"></span>
+        <span class="firefly" style="top:82%; right:10%; --dx:12px; --dy:-18px; animation-delay:3.6s;"></span>
+        <div class="phone">
+          <img src="img/home-dark.png" alt="Màn hình Trang chủ Huyền Nguyệt, ban đêm — cây may mắn phát sáng phía sau các ô chức năng">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="wrap">
+      <div class="stat"><b>78</b><span>lá bài Rider–Waite gốc 1909</span></div>
+      <div class="stat"><b>0</b><span>SDK bên thứ 3 theo dõi bạn</span></div>
+      <div class="stat"><b>4</b><span>giao diện, đổi tức thì</span></div>
+      <div class="stat"><b>2</b><span>ngôn ngữ, Việt và Anh</span></div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Bên trong Huyền Nguyệt</p>
+        <h2>Sáu góc nhỏ, một buổi tối rảnh rỗi</h2>
+        <p>Mỗi tính năng đứng độc lập, nhưng đều trả lời chung một câu hỏi: hôm nay nên làm gì.</p>
+      </div>
+
+      <div class="feature-row reveal">
+        <div class="feature-art">
+          <div class="phone">
+            <img src="img/daily-draw.png" alt="Màn hình Rút bài ngày — chạm để rút ba lá bài Tarot">
+          </div>
+        </div>
+        <div class="feature-copy">
+          <p class="eyebrow">Rút bài</p>
+          <h3>Ba lá bài, một buổi sáng rõ ràng hơn</h3>
+          <p>Mỗi ngày một lượt rút — 78 lá Rider–Waite quét lại từ bộ bài gốc năm 1909, luận theo đúng ngữ cảnh hôm nay. Muốn rút lại cũng được, nhưng lá đầu tiên thường là lá thật lòng nhất.</p>
+        </div>
+      </div>
+
+      <div class="feature-row reveal">
+        <div class="feature-art">
+          <div class="phone">
+            <img src="img/natal-chart.png" alt="Màn hình Bản đồ sao — bánh xe 12 nhà Placidus và các đường góc chiếu">
+          </div>
+        </div>
+        <div class="feature-copy">
+          <p class="eyebrow">Chiêm tinh Tây phương</p>
+          <h3>Bánh xe 12 nhà, dựng như phần mềm chiêm tinh thật</h3>
+          <p>Nhập ngày giờ và nơi sinh một lần — Huyền Nguyệt tự tính vị trí 10 hành tinh, 12 nhà theo hệ Placidus, cùng mọi góc chiếu giữa chúng. Toàn bộ chạy ngay trên máy, không cần chờ server nào cả.</p>
+        </div>
+      </div>
+
+      <div class="feature-row reveal">
+        <div class="feature-art">
+          <div class="phone">
+            <img src="img/good-day.png" alt="Màn hình Xem ngày giờ tốt xấu và nhắc lịch âm">
+          </div>
+        </div>
+        <div class="feature-copy">
+          <p class="eyebrow">Lịch âm Việt</p>
+          <h3>Ngày nào nên đi, ngày nào nên ở nhà</h3>
+          <p>Giờ hoàng đạo, ngày lễ âm lịch, lịch ăn chay, ngày giỗ — tất cả nhắc đúng giờ bạn chọn, kể cả khi điện thoại đang ngủ sâu. Không còn lỡ mất một ngày rằm nào nữa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="themes">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Giao diện</p>
+        <h2>Một app, bốn tâm trạng</h2>
+        <p>Minh Nguyệt, Huyền Nguyệt, Sunrise, Sunset — đổi ngay lập tức, không cần khởi động lại app.</p>
+      </div>
+      <div class="theme-pair">
+        <div class="phone phone-lg">
+          <img src="img/home-light.png" alt="Giao diện sáng Minh Nguyệt">
+        </div>
+        <div class="phone phone-lg">
+          <img src="img/home-dark.png" alt="Giao diện tối Huyền Nguyệt">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Vì sao chọn Huyền Nguyệt</p>
+        <h2>Một app sạch, đúng nghĩa</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" fill="currentColor"/></svg>
+          </div>
+          <h3>Hoàn toàn offline</h3>
+          <p>Mọi phép tính — tarot, thiên văn, âm lịch — chạy ngay trên máy bạn. Không mạng vẫn dùng được trọn vẹn.</p>
+        </div>
+        <div class="why-card">
+          <div class="mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="1.8"/></svg>
+          </div>
+          <h3>0 quảng cáo, 0 theo dõi</h3>
+          <p>Không nhúng SDK bên thứ ba nào, kể cả các bộ đo lường phổ biến. Ưu tiên sạch hơn ưu tiên số liệu.</p>
+        </div>
+        <div class="why-card">
+          <div class="mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Nhắc đúng giờ, không trễ</h3>
+          <p>Dùng báo thức hệ thống thay vì tác vụ nền — thông báo bắn đúng phút bạn chọn, kể cả khi máy đang ngủ.</p>
+        </div>
+        <div class="why-card">
+          <div class="mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 19.5V6a2 2 0 0 1 2-2h11.5a1 1 0 0 1 1 1v13" stroke="currentColor" stroke-width="1.8"/><path d="M6 22a2 2 0 0 1-2-2v0a2 2 0 0 1 2-2h13" stroke="currentColor" stroke-width="1.8"/></svg>
+          </div>
+          <h3>Nội dung có nguồn gốc</h3>
+          <p>Bộ tarot quét từ bản Rider–Waite gốc 1909, public domain — không phải bản tô màu lại. Ngày lễ âm lịch đối chiếu từ Giáo hội Phật giáo Việt Nam.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="voices" id="voices">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Trước ngày ra mắt</p>
+        <h2>Vài lời từ nhóm dùng thử sớm</h2>
+      </div>
+      <div class="voice-grid">
+        <div class="voice-card">
+          <p class="voice-quote">"Rút bài xong là biết ngay hôm nay nên chậm lại hay nên liều. Thích nhất là không có quảng cáo chen ngang giữa chừng."</p>
+          <div class="voice-who">
+            <div class="avatar" aria-hidden="true">L</div>
+            <div><b>Linh</b><span>Dùng thử trước ra mắt</span></div>
+          </div>
+        </div>
+        <div class="voice-card">
+          <p class="voice-quote">"Bản đồ sao đúng như mấy app chiêm tinh nước ngoài mình hay dùng, mà lại đọc được hết bằng tiếng Việt."</p>
+          <div class="voice-who">
+            <div class="avatar" aria-hidden="true">A</div>
+            <div><b>Minh Anh</b><span>Dùng thử trước ra mắt</span></div>
+          </div>
+        </div>
+        <div class="voice-card">
+          <p class="voice-quote">"Nhắc ăn chay với ngày giỗ ông bà đúng giờ mình đặt, không trễ vài tiếng như app lịch cũ."</p>
+          <div class="voice-who">
+            <div class="avatar" aria-hidden="true">H</div>
+            <div><b>Gia Hân</b><span>Dùng thử trước ra mắt</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="voices-note">Trích ý từ phản hồi của nhóm dùng thử trước khi ra mắt — diễn đạt lại cho ngắn gọn.</p>
+    </div>
+  </section>
+
+  <section class="cta" id="cta">
+    <div class="wrap">
+      <div class="cta-panel">
+        <p class="eyebrow">Sẵn sàng chưa</p>
+        <h2>Mở lá bài đầu tiên của bạn</h2>
+        <p>Huyền Nguyệt đã có mặt trên Google Play — miễn phí, không quảng cáo, không cần tài khoản. Cài đặt và rút lá bài đầu tiên ngay hôm nay.</p>
+        <div class="btn-row">
+          <a class="btn btn-gold" href="https://play.google.com/store/apps/details?id=com.huyennguyet.app" target="_blank" rel="noopener">Tải trên Google Play</a>
+          <a class="btn btn-ghost" href="#features">Xem lại tính năng</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-brand">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="32" cy="32" r="26" fill="#6C4DF6"/>
+        <circle cx="30" cy="32" r="18" fill="#E8B84B"/>
+        <circle cx="37" cy="30.5" r="18" fill="#12091F"/>
+        <path d="M50 44 L52.4 49.6 L58 52 L52.4 54.4 L50 60 L47.6 54.4 L42 52 L47.6 49.6 Z" fill="#E8B84B"/>
+      </svg>
+      <span>Huyền Nguyệt</span>
+    </div>
+    <p>Tarot, chiêm tinh và lịch âm Việt, gói gọn trong một app tối giản. Ảnh minh hoạ lấy từ bản dựng thật của app.</p>
+    <p><a href="/privacy/">Chính sách quyền riêng tư</a></p>
   </div>
-
-  <section>
-    <h2><span class="section-index">01</span>Dữ liệu chúng tôi không thu thập</h2>
-    <ul class="rule-list">
-      <li>Không yêu cầu đăng ký tài khoản hay đăng nhập.</li>
-      <li>Không tích hợp bất kỳ thư viện phân tích (analytics), quảng cáo, hay theo dõi hành vi nào của bên thứ ba.</li>
-      <li>Không xin quyền truy cập Internet — về mặt kỹ thuật, ứng dụng không có khả năng gửi bất kỳ dữ liệu nào ra khỏi thiết bị của bạn, ngay cả khi muốn.</li>
-      <li>Không thu thập vị trí, danh bạ, hay thông tin từ các ứng dụng mạng xã hội khác.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2><span class="section-index">02</span>Dữ liệu lưu trên máy bạn</h2>
-    <p>Để ứng dụng hoạt động, một số thông tin được lưu trực tiếp trên thiết bị của bạn (không đồng bộ lên máy chủ nào của chúng tôi, vì chúng tôi không vận hành máy chủ nào):</p>
-    <ul class="rule-list">
-      <li>Hồ sơ cá nhân bạn nhập khi bắt đầu dùng app: tên và ngày sinh (giờ/nơi sinh nếu bạn chọn dùng tính năng Bản đồ sao).</li>
-      <li>Lịch sử các lượt rút bài tarot và kết quả bói độ hợp bạn đã thực hiện trong app.</li>
-      <li>Nếu bạn dùng tính năng "Xem tướng khuôn mặt": kết quả phân loại đặc điểm khuôn mặt (không phải ảnh gốc) — ảnh chụp chỉ được giữ lại nếu bạn chủ động chọn lưu.</li>
-      <li>Lựa chọn giao diện (theme) và cài đặt thông báo.</li>
-    </ul>
-    <p class="muted" style="margin-top:18px">Gỡ cài đặt ứng dụng, hoặc xóa dữ liệu ứng dụng trong Cài đặt hệ thống Android, sẽ xóa vĩnh viễn toàn bộ dữ liệu này khỏi thiết bị của bạn.</p>
-  </section>
-
-  <section>
-    <h2><span class="section-index">03</span>Quyền truy cập thiết bị mà app xin</h2>
-    <ul class="rule-list">
-      <li>
-        <span class="item-title">Thông báo</span><span class="item-badge">Tùy chọn</span>
-        <div class="item-desc">Chỉ dùng để nhắc bạn "lá bài hôm nay đã sẵn sàng" hoặc nhắc xem ngày tốt xấu, nếu bạn bật trong Cài đặt. Có thể tắt bất cứ lúc nào.</div>
-      </li>
-      <li>
-        <span class="item-title">Khởi động lại thiết bị</span>
-        <div class="item-desc">Dùng để đặt lại đúng giờ nhắc thông báo sau khi bạn khởi động lại điện thoại — không dùng cho mục đích nào khác.</div>
-      </li>
-      <li>
-        <span class="item-title">Máy ảnh</span><span class="item-badge">Chỉ xin khi bạn mở "Xem tướng khuôn mặt"</span>
-        <div class="item-desc">Dùng cho tính năng "Xem tướng khuôn mặt" — chụp hoặc chọn 1 ảnh chân dung để phân tích. Ảnh được xử lý hoàn toàn trên máy bạn (không có bước nào tải ảnh lên máy chủ) và không được giữ lại sau khi phân tích xong, trừ khi bạn chủ động bấm lưu ảnh.</div>
-      </li>
-    </ul>
-  </section>
-
-  <section>
-    <h2><span class="section-index">04</span>Trẻ em</h2>
-    <p>Huyền Nguyệt không hướng tới trẻ em dưới 13 tuổi và không cố ý thu thập thông tin từ trẻ em.</p>
-  </section>
-
-  <section>
-    <h2><span class="section-index">05</span>Thay đổi chính sách này</h2>
-    <p>Nếu chính sách này thay đổi, bản cập nhật sẽ được đăng tại đúng địa chỉ này kèm ngày hiệu lực mới ở đầu trang.</p>
-  </section>
-
-  <section>
-    <h2><span class="section-index">06</span>Liên hệ</h2>
-    <p class="contact-line">Có câu hỏi về quyền riêng tư trong Huyền Nguyệt? Liên hệ: <a href="mailto:dat.dtnhcse@gmail.com">dat.dtnhcse@gmail.com</a></p>
-  </section>
-
-  <footer>
-    Huyền Nguyệt · com.huyennguyet.app
-  </footer>
-</div>
+</footer>
 
 <script>
-  // Small constellation + crescent mark, echoing the app's own icon — a
-  // genuine visual tie to this app instead of a generic hero graphic.
-  // Doubles as the theme toggle: tap it to force light/dark, overriding
-  // system preference; choice persists via localStorage.
-  (function () {
-    var STORAGE_KEY = 'hn-privacy-theme';
-    var root = document.documentElement;
-    var button = document.getElementById('markButton');
-    var canvas = document.getElementById('mark');
-    var ctx = canvas.getContext('2d');
-    var dpr = window.devicePixelRatio || 1;
-    var size = 72;
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
-    canvas.style.width = size + 'px';
-    canvas.style.height = size + 'px';
-    ctx.scale(dpr, dpr);
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function effectiveTheme() {
-      var explicit = root.getAttribute('data-theme');
-      if (explicit === 'light' || explicit === 'dark') return explicit;
-      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    }
+  // Nav blur-on-scroll
+  var nav = document.getElementById('nav');
+  var onScroll = function(){
+    if(window.scrollY > 12){ nav.classList.add('is-scrolled'); }
+    else{ nav.classList.remove('is-scrolled'); }
+  };
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
 
-    function draw(theme) {
-      ctx.clearRect(0, 0, size, size);
-      var gold = theme === 'light' ? '#B4841B' : '#E8B84B';
-      var dim = theme === 'light' ? 'rgba(180,132,27,0.35)' : 'rgba(232,184,75,0.35)';
-
-      var stars = [[10, 14], [62, 10], [58, 54], [8, 50], [34, 6], [66, 34]];
-      ctx.fillStyle = dim;
-      stars.forEach(function (p) {
-        ctx.beginPath();
-        ctx.arc(p[0], p[1], 1.3, 0, Math.PI * 2);
-        ctx.fill();
+  // Scroll reveal for feature rows
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !reduceMotion){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
       });
+    }, {threshold:0.2});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
 
-      var cx = 36, cy = 36;
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, 15, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
-      ctx.fillStyle = gold;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 15, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.beginPath();
-      ctx.arc(cx + 8, cy - 3, 13, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+  // Twinkling starfield in hero
+  var canvas = document.getElementById('stars');
+  if(canvas){
+    var ctx = canvas.getContext('2d');
+    var hero = canvas.closest('.hero');
+    var stars = [];
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-      ctx.fillStyle = gold;
-      var sx = 56, sy = 20, s = 5;
-      ctx.beginPath();
-      ctx.moveTo(sx, sy - s);
-      ctx.quadraticCurveTo(sx + 2, sy - 2, sx + s, sy);
-      ctx.quadraticCurveTo(sx + 2, sy + 2, sx, sy + s);
-      ctx.quadraticCurveTo(sx - 2, sy + 2, sx - s, sy);
-      ctx.quadraticCurveTo(sx - 2, sy - 2, sx, sy - s);
-      ctx.fill();
+    function resize(){
+      var rect = hero.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      var count = Math.round((rect.width * rect.height) / 9000);
+      stars = [];
+      for(var i=0;i<count;i++){
+        stars.push({
+          x: Math.random() * rect.width,
+          y: Math.random() * rect.height * 0.75,
+          r: Math.random() * 1.3 + 0.4,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.6 + Math.random() * 0.8
+        });
+      }
     }
 
-    function applyTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) { /* private mode, ignore */ }
-      draw(theme);
-      button.setAttribute('aria-label', theme === 'light' ? 'Đổi sang giao diện tối' : 'Đổi sang giao diện sáng');
+    function draw(t){
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(var i=0;i<stars.length;i++){
+        var s = stars[i];
+        var alpha = reduceMotion ? 0.55 : (0.35 + 0.45 * (0.5 + 0.5 * Math.sin(t/1000 * s.speed + s.phase)));
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(245,241,250,' + alpha.toFixed(3) + ')';
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+      if(!reduceMotion){ requestAnimationFrame(draw); }
     }
 
-    var saved = null;
-    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* private mode, ignore */ }
-    if (saved === 'light' || saved === 'dark') {
-      root.setAttribute('data-theme', saved);
-    }
-    draw(effectiveTheme());
-
-    button.addEventListener('click', function () {
-      applyTheme(effectiveTheme() === 'light' ? 'dark' : 'light');
-    });
-  })();
+    resize();
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(draw);
+    if(reduceMotion){ draw(0); }
+  }
+})();
 </script>
-</body>
-</html>
