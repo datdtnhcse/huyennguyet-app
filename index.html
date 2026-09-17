@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#12091F;
@@ -19,9 +19,15 @@
     --text-muted:#B8A9D9;
     --outline:#4A3570;
 
-    --font-display:"Playfair Display", "Noto Serif", Georgia, serif;
-    --font-heading:"Cormorant Garamond", "Noto Serif", Georgia, serif;
+    --font-display:"Newsreader", "Noto Serif", Georgia, serif;
+    --font-heading:"Newsreader", "Noto Serif", Georgia, serif;
     --font-body:"Be Vietnam Pro", "Noto Sans", system-ui, sans-serif;
+
+    /* Asymmetric corner radii — same formula the app itself now uses
+       (TarotShapes in Shape.kt) instead of the uniform 20px/999px "rounded
+       everywhere" default, so the landing page reads as the same product. */
+    --radius-card: 6px 28px 6px 28px;
+    --radius-btn: 6px 20px 6px 20px;
 
     --side-pad: clamp(20px, 6vw, 64px);
     --section-pad: clamp(64px, 9vw, 112px);
@@ -132,7 +138,7 @@
     justify-content:center;
     gap:8px;
     padding:13px 26px;
-    border-radius:999px;
+    border-radius:var(--radius-btn);
     font-family:var(--font-body);
     font-weight:600;
     font-size:0.95rem;
@@ -142,12 +148,11 @@
     white-space:nowrap;
   }
   .btn-gold{
-    background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+    background:var(--gold);
     color:var(--on-gold);
-    box-shadow:0 8px 24px -8px rgba(232,184,75,0.55);
-    transition:transform .2s ease, box-shadow .2s ease;
+    transition:transform .2s ease, background-color .2s ease;
   }
-  .btn-gold:hover{transform:translateY(-1px); box-shadow:0 10px 28px -6px rgba(232,184,75,0.65);}
+  .btn-gold:hover{transform:translateY(-1px); background-color:var(--gold-soft);}
   .btn-ghost{
     background:transparent;
     color:var(--text);
@@ -161,15 +166,6 @@
     position:relative;
     padding-block: clamp(48px,8vw,72px) var(--section-pad);
     overflow:hidden;
-  }
-  .hero-glow{
-    position:absolute;
-    top:-180px; left:50%;
-    transform:translateX(-50%);
-    width:900px; height:700px;
-    background:radial-gradient(closest-side, rgba(108,77,246,0.30), rgba(108,77,246,0) 70%);
-    pointer-events:none;
-    z-index:0;
   }
   #stars{
     position:absolute; inset:0;
@@ -192,17 +188,14 @@
   }
   .hero-copy h1{
     font-family:var(--font-display);
-    font-weight:900;
+    font-weight:700;
     font-size:clamp(2.35rem, 5.6vw, 4rem);
     line-height:1.08;
     margin-block:14px 18px;
   }
   .hero-copy h1 em{
-    font-style:normal;
-    background:linear-gradient(180deg,var(--gold-soft),var(--gold));
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
+    font-style:italic;
+    color:var(--gold);
   }
   .hero-copy p.lede{
     max-width:46ch;
@@ -278,7 +271,7 @@
   .stat b{
     display:block;
     font-family:var(--font-display);
-    font-weight:900;
+    font-weight:700;
     font-size:clamp(1.8rem,3.4vw,2.6rem);
     font-variant-numeric:tabular-nums;
     color:var(--gold);
@@ -366,7 +359,7 @@
     gap:1px;
     background:var(--outline);
     border:1px solid var(--outline);
-    border-radius:20px;
+    border-radius:var(--radius-card);
     overflow:hidden;
   }
   @media (max-width:900px){ .why-grid{grid-template-columns:repeat(2,1fr);} }
@@ -379,7 +372,7 @@
   .why-card .mark{
     width:38px; height:38px;
     display:flex; align-items:center; justify-content:center;
-    border-radius:12px;
+    border-radius:4px 12px 4px 12px;
     background:var(--surface-3);
     color:var(--gold);
   }
@@ -437,16 +430,16 @@
   }
   .cta-panel{
     position:relative;
-    border-radius:28px;
+    border-radius:8px 40px 8px 40px;
     border:1px solid var(--outline);
-    background:radial-gradient(120% 160% at 50% 0%, rgba(232,184,75,0.14), var(--surface) 60%);
+    background:var(--surface);
     padding:clamp(40px,7vw,72px) clamp(24px,6vw,64px);
     text-align:center;
     overflow:hidden;
   }
   .cta-panel h2{
     font-family:var(--font-display);
-    font-weight:900;
+    font-weight:700;
     font-size:clamp(1.9rem,4vw,2.8rem);
   }
   .cta-panel p{
@@ -496,7 +489,6 @@
 
 <main id="top">
   <section class="hero">
-    <div class="hero-glow" aria-hidden="true"></div>
     <canvas id="stars" aria-hidden="true"></canvas>
     <div class="wrap">
       <div class="hero-copy">
